@@ -32,12 +32,12 @@ namespace RatesApi.Controllers
         }
 
         // GET api/<RatesController>/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{name}")]
+        public async Task<IActionResult> Get(string name)
         {
             try
             {
-                return Ok(ratesRepository.GetRates().First(x => x.Id == id));
+                return Ok(ratesRepository.GetRates().First(x => x.Name == name));
             }
             catch (Exception ex)
             {

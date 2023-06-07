@@ -1,5 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddSingleton<TimerService>();
 
 var app = builder.Build();
 
@@ -15,5 +16,7 @@ if (!app.Environment.IsDevelopment())
 app.UseAuthorization();
 app.MapControllers();
 
+var timer = app.Services.GetService<TimerService>();
+timer.StartTimer();
 
 app.Run();
