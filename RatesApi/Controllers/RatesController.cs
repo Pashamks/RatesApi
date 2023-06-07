@@ -79,7 +79,7 @@ namespace RatesApi.Controllers
                 if (newRate != null)
                 {
                     ratesRepository.UpdateRate(new RateModel { Name = newRate.Name, ExchangeRate = newRate.ExchangeRate, Rate = newRate.Rate }, ratesRepository.GetRates().First(x => x.Id == id));
-                    return Ok("Rate was added");
+                    return Ok("Rate was updated");
                 }
                 throw new Exception("Rates doesn't exist");
             }
@@ -91,9 +91,18 @@ namespace RatesApi.Controllers
         }
 
         // DELETE api/<RatesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{name}")]
+        public async Task<IActionResult> Delete(string name)
         {
+            try
+            {
+                ratesRepository.DeleteRate(name);
+                return Ok("Rate was deleted");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
