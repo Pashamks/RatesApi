@@ -35,7 +35,15 @@ namespace RatesApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            return Ok();
+            try
+            {
+                return Ok(ratesRepository.GetRates().First(x => x.Id == id));
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
         // POST api/<RatesController>
@@ -62,8 +70,24 @@ namespace RatesApi.Controllers
 
         // PUT api/<RatesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] string name)
         {
+            try
+            {
+                var newRate = (await RatesManager.GetRates()).FirstOrDefault(x => x.Name == name);
+
+                if (newRate != null)
+                {
+                    ratesRepository.UpdateRate(new RateModel { Name = newRate.Name, ExchangeRate = newRate.ExchangeRate, Rate = newRate.Rate }, ratesRepository.GetRates().First(x => x.Id == id));
+                    return Ok("Rate was added");
+                }
+                throw new Exception("Rates doesn't exist");
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE api/<RatesController>/5
